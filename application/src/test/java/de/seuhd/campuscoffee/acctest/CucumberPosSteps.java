@@ -92,6 +92,11 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Given step for new scenario
+    @Given("a POS list with the following elements")
+    public void aPosListWithTheFollowingElements(List<PosDto> posList) {
+        createdPosList = createPos(posList);
+        assertThat(createdPosList).size().isEqualTo(posList.size());
+    }
 
     // When -----------------------------------------------------------------------
 
@@ -102,6 +107,22 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add When step for new scenario
+    @When("I update the description of POS \"Bäcker Görtz\" to \"Great Käseeibrötchen\"")
+    public void updateTheDescriptionOfPOS() {
+        PosDto retrievedPos = retrievePosByName("Bäcker Görtz");
+        PosDto updated = PosDto.builder()
+                .id(retrievedPos.id())
+                .name(retrievedPos.name())
+                .description("Great Käseeibrötchen")
+                .type(retrievedPos.type())
+                .campus(retrievedPos.campus())
+                .street(retrievedPos.street())
+                .houseNumber(retrievedPos.houseNumber())
+                .postalCode(retrievedPos.postalCode())
+                .city(retrievedPos.city())
+                .build();
+        updatePos(List.of(updated));
+    }
 
     // Then -----------------------------------------------------------------------
 
@@ -114,4 +135,11 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Then step for new scenario
+    @Then("the POS with name \"Bäcker Görtz\" should have the description \"Great Käseeibrötchen\"")
+    public void thePosWithNameShouldHaveTheDescription() {
+        PosDto retrievedPos = retrievePosByName("Bäcker Görtz");
+        assertThat(retrievedPos.description()).isEqualTo("Great Käseeibrötchen");
+    }
+
+
 }
